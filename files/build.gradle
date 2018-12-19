@@ -1,0 +1,53 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    /**
+     * aar文件的编译
+     */
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+        maven {
+            url "https://jitpack.io"
+        }
+    }
+    sourceSets {
+        main.res.srcDirs = [
+                'src/main/res',
+                'src/main/res-public'
+        ]
+    }
+
+    compileOptions {
+        kotlinOptions.freeCompilerArgs += ['-module-name', "com.afollestad.material-dialogs.files"]
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compileOnly rootProject.ext.designVersion
+    implementation project(':core')
+    implementation project(':input')
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.0-alpha"
+    compileOnly "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+
+apply from: '../maven.gradle'
+
+
